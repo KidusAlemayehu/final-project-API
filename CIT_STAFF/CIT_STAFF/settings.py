@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',       # Swagger 
     'drf_yasg',
     'rest_framework.authtoken',
+    'corsheaders',
     'django_rest_passwordreset',
     'apps.staff_auth',
     'apps.staff_user',
@@ -74,7 +75,25 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CSRF_TRUSTED_ORIGINS = []
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
+
 
 
 AUTH_USER_MODEL = "staff_user.StaffUser"

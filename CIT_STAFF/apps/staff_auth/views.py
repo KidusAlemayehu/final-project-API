@@ -1,5 +1,8 @@
+from base64 import urlsafe_b64decode, urlsafe_b64encode
+from django.forms import ValidationError
 from django.shortcuts import render
 from rest_framework.views import APIView
+from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import LoginSerializer
@@ -9,6 +12,11 @@ from .token import token_expire_handler, expires_in, is_token_expired
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import login, logout
+from apps.staff_auth import permission_handler as MyPermissions
+from django.conf import settings
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.encoding import force_bytes
+from django.contrib.sites.shortcuts import get_current_site
 
 
 # Create your views here.
@@ -42,5 +50,55 @@ class LogoutAPIView(APIView):
             return Response({"message":"logout successfully"}, status=status.HTTP_200_OK)
         else:
             return Response({"message":"user is not authenticated"}, status=status.HTTP_403_FORBIDDEN)
+
+
+class ChangePasswordView(APIView):
+    permission_classes = [MyPermissions.IsAuthenticated]
+    
+    def get(self, request):
+         if request.user.is_authenticated:
+            uidb64 = urlsafe_b64encode(force_bytes(request.user.pk))
+            token = PasswordResetTokenGenerator().make_token(request.user)
+            relative_uri = "set_password/"+"?uidb64=" + uidb64.decode() + "&token=" + str(token)
+            change_link =  "http://127.0.0.1:8000/auth/" + relative_uri
+            data = {'change_password_link': change_link}
+            return Response(data, status=status.HTTP_200_OK)
+     
+class SetChangePasswordView(UpdateAPIView):
+    queryset = get_user_model().objects.all()
+    
+    def put(self, request, format='json'):
+        """
+        Allows resetting password using a unique link 
+        """
+        uidb64 = request.GET.get('uidb64')
+        token = request.GET.get('token')
+        user_model = get_user_model()
+
+        new_password = request.data["password"]
+        confirm_password = request.data["confirm_password"]
         
+        if new_password and confirm_password:
+            if new_password!= confirm_password:
+                raise ValidationError("Passwords don't match", code='authorization')
+        else:
+            raise ValidationError('Must include "password" and "confirm_password".', code='authorization')
+        
+        token_generator = PasswordResetTokenGenerator()
+        try:
+            uid = urlsafe_b64decode(uidb64).decode('utf-8')
+            print("UID: %s" % uid)
+            user = user_model.objects.get(pk=uid)
+        except(ValueError, OverflowError, user_model.DoesNotExist):
+            user = None
+        print("USER: %s" % user)
+        if user:
+            if token_generator.check_token(user, token):
+                user.set_password(new_password)
+                user.save()
+                return Response({'success': 'Password was successfully Changed'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Invalid Request. Token may have expired.'}, status=status.HTTP_401_UNAUTHORIZED) 
+        else:
+            return Response({'error': 'Invalid Request. Unable to parse data'}, status=status.HTTP_400_BAD_REQUEST)
         

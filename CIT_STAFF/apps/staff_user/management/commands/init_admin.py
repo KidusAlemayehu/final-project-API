@@ -11,18 +11,19 @@ class Command(BaseCommand):
             "email": "kidusalemayehu3346@gmail.com",
             "password": os.getenv("ADMIN_PASSWORD"),
             "phone": os.getenv("ADMIN_PHONE"),
+            "office":"HOD",
             "role": "Administrator",
             "gender": "Male"
         }
         if not StaffUser.objects.filter(username=data['username']).exists():
-            print("Initiating Administrator Account ...")
+            self.stdout.write(self.style.NOTICE("Initiating Administrator Account ..."))
             try:
                 password = data.pop('password')
                 admin_user = StaffUser.objects.create(**data)
                 admin_user.set_password(password)
                 admin_user.save()
-                print("Initiating Completed!")
+                self.stdout.write(self.style.SUCCESS("Initiating Completed!"))
             except Exception as e:
                 return str(e)
         else:
-            print("Administrator Account already exists!")
+            self.stdout.write(self.style.ERROR_OUTPUT("Administrator Account already exists!"))

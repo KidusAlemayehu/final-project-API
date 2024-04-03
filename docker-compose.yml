@@ -42,7 +42,7 @@ services:
              python manage.py migrate &&
              python manage.py init_admin &&
              python manage.py runserver 0.0.0.0:8888 &&
-             gunicorn --bind 0.0.0.0:8888 CIT_STAFF.asgi -w 40 -k uvicorn.workers.UvicornWorker"
+             gunicorn --bind 0.0.0.0:8888 CIT_STAFF.wsgi -w 40 -k uvicorn.workers.UvicornWorker"
         ports: 
             - "8888:8888"
         depends_on:

@@ -22,6 +22,7 @@ from drf_yasg import openapi
 from rest_framework import permissions
 from apps.staff_user import urls as StaffUrls
 from apps.staff_auth import urls as AuthUrls
+from apps.projects import urls as ProjectUrls
 
 
 schema_view = get_schema_view(
@@ -37,5 +38,6 @@ urlpatterns = [
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0),name='schema-swagger-ui'),
     path('', include(StaffUrls)),
     path('auth/', include(AuthUrls)),
+    path('', include(ProjectUrls)),
 ]
 

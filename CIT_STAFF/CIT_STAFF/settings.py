@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
     'apps.staff_auth',
     'apps.staff_user',
+    'apps.projects',
 ]
 
 REST_FRAMEWORK = {

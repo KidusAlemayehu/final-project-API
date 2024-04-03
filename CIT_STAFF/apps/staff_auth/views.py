@@ -16,7 +16,6 @@ from apps.staff_auth import permission_handler as MyPermissions
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_bytes
-from django.contrib.sites.shortcuts import get_current_site
 
 
 # Create your views here.
@@ -64,7 +63,7 @@ class ChangePasswordView(APIView):
             data = {'change_password_link': change_link}
             return Response(data, status=status.HTTP_200_OK)
      
-class SetChangePasswordView(UpdateAPIView):
+class SetChangePasswordView(APIView):
     queryset = get_user_model().objects.all()
     
     def put(self, request, format='json'):

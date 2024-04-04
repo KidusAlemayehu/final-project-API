@@ -33,6 +33,10 @@ class ProjectAccessRoleTableViewset(viewsets.ModelViewSet):
         context = super().get_serializer_context()
         context['project_access_table'] = ProjectAccessTable.objects.filter(pk=self.kwargs['access_table_pk']).first()
         return context
+    
+    def get_queryset(self):
+        queryset = ProjectAccessRoleTable.objects.filter(project_access_table__pk=self.kwargs['access_table_pk'])
+        return queryset
 
 class ProjectTaskViewset(viewsets.ModelViewSet):
     queryset = ProjectTask.objects.all()

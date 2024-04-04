@@ -23,7 +23,7 @@ class StaffUserViewset(viewsets.ModelViewSet):
             queryset = queryset.filter(office="TA")    
         else:
             queryset = queryset.filter(pk=self.request.user).first()
-            
+        filter = {}  
         try:
             office = self.request.GET.get('office')
         except:
@@ -33,8 +33,12 @@ class StaffUserViewset(viewsets.ModelViewSet):
             role = self.request.GET.get('role')
         except:
             role = None
-        
-        queryset = queryset.filter(office=office, role=role)
+
+        if office:
+            filter['office'] = office
+        if role:
+            filter['role'] = role
+        queryset = queryset.filter(**filter)
         return queryset
         
     def get_permissions(self):

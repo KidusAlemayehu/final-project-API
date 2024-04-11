@@ -93,7 +93,7 @@ class ProjectTaskAssignment(models.Model):
         db_table = 'project_task_assignment'
         
 def attachment_path(instance, filename):
-    return 'Files/Project_{0}/Task_{1}/{2}'.format(instance.task.project.name, instance.task.id, filename)
+    return 'Attachments/Project_{0}/Task_{1}/{2}'.format(instance.task.project.name, instance.task.id, filename)
         
 class ProjectTaskAttachment(models.Model):
     id = models.BigAutoField(primary_key=True, db_index=True, unique=True, null=False)

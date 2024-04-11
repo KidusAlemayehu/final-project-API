@@ -13,7 +13,8 @@ class Command(BaseCommand):
             "phone": os.getenv("ADMIN_PHONE"),
             "office":"HOD",
             "role": "Administrator",
-            "gender": "Male"
+            "gender": "Male",
+            "is_superuser": True,
         }
         if not StaffUser.objects.filter(username=data['username']).exists():
             self.stdout.write(self.style.NOTICE("Initiating Administrator Account ..."))

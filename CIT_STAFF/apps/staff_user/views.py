@@ -43,7 +43,7 @@ class StaffUserViewset(viewsets.ModelViewSet):
         
     def get_permissions(self):
         if self.action == 'create':
-            permission_classes = [Permissions.IsHOD | permissions.AllowAny]
+            permission_classes = [Permissions.IsHOD]
         else:
             permission_classes = [Permissions.IsAuthenticated] 
         return [permission() for permission in permission_classes]

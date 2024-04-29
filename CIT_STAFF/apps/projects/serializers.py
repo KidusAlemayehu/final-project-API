@@ -3,9 +3,7 @@ from .models import *
 
 class NestedParentSerializer:
     def validate(self, data):
-        data['project'] = self.context.get('project')
-        print("validating ", data['project'])
-        return data
+        pass
     
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,17 +22,25 @@ class ProjectSerializer(serializers.ModelSerializer):
         return project
         
         
-class ProjectTaskSerializer(NestedParentSerializer, serializers.ModelSerializer):
+class ProjectTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectTask
         fields = '__all__'
         read_only_fields = ['project', 'created_at', 'updated_at']
+        
+    def validate(self, attrs):
+        attrs['project'] = self.context.get('project')
+        return attrs
         
 class ProjectAccessTableSerializer(NestedParentSerializer, serializers.ModelSerializer):
     class Meta:
         model = ProjectAccessTable
         fields = '__all__'
         read_only_fields = ['project', 'created_at', 'updated_at']
+        
+    def validate(self, data):
+        data['project'] = self.context.get('project')
+        return data
         
 class ProjectAccessRoleTableSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
@@ -43,9 +49,31 @@ class ProjectAccessRoleTableSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['project_access_table', 'created_at', 'updated_at']
         
-        def create(self, validated_data):
-            validated_data['project_access_table'] = self.context.get('project_access_table')
-            project_access_role_table = ProjectAccessRoleTable.objects.create(**validated_data)
-            project_access_role_table.save()
-            return project_access_role_table
+    def create(self, validated_data):
+        validated_data['project_access_table'] = self.context.get('project_access_table')
+        project_access_role_table = ProjectAccessRoleTable.objects.create(**validated_data)
+        project_access_role_table.save()
+        return project_access_role_table
+        
+class ProjectTaskCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectTaskComment
+        fields = '__all__'
+        read_only_fields = ['project_task', 'created_at', 'updated_at']
+        
+    def validate(self, attrs):
+        attrs['project_task'] = self.context.get('project_task')
+        return attrs
+    
+class ProjectTaskAssigneeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectTaskAssignment
+        fields = '__all__'
+        read_only_fields = ['project_task', 'created_at', 'updated_at']
+        
+    def validate(self, attrs):
+        attrs['project_task'] = self.context.get('project_task')
+        return attrs
+        
+    
         

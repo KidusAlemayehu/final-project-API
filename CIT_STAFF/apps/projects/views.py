@@ -10,6 +10,7 @@ from apps.staff_user.models import StaffUser
 class ProjectViewset(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    permission_classes = (AuthPermissions.IsAuthenticated,)
     
     def get_serializer_context(self):
         user = StaffUser.objects.filter(pk=self.request.user.pk).first()
@@ -19,7 +20,8 @@ class ProjectViewset(viewsets.ModelViewSet):
 
 class ProjectAccessTableViewset(viewsets.ReadOnlyModelViewSet):
     queryset = ProjectAccessTable.objects.all()
-    serializer_class = ProjectAccessTableSerializer    
+    serializer_class = ProjectAccessTableSerializer   
+    permission_classes = (AuthPermissions.IsAuthenticated, ) 
     
     def get_queryset(self):
         queryset = ProjectAccessTable.objects.filter(project__pk=self.kwargs['project_pk'])
@@ -35,6 +37,7 @@ class ProjectAccessTableViewset(viewsets.ReadOnlyModelViewSet):
 class ProjectAccessRoleTableViewset(viewsets.ModelViewSet):
     queryset = ProjectAccessRoleTable.objects.all()
     serializer_class = ProjectAccessRoleTableSerializer
+    permission_classes = (AuthPermissions.IsAuthenticated, )
     
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -55,6 +58,7 @@ class ProjectAccessRoleTableViewset(viewsets.ModelViewSet):
 class ProjectTaskViewset(viewsets.ModelViewSet):
     queryset = ProjectTask.objects.all()
     serializer_class = ProjectTaskSerializer
+    permission_classes = (AuthPermissions.IsAuthenticated, )
     
     def get_queryset(self):
         queryset = ProjectTask.objects.filter(project__pk=self.kwargs['project_pk'])
@@ -66,3 +70,32 @@ class ProjectTaskViewset(viewsets.ModelViewSet):
         context['project'] = project
         return context
     
+class ProjectTaskCommentViewset(viewsets.ModelViewSet):
+    queryset = ProjectTaskComment.objects.all()
+    serializer_class = ProjectTaskCommentSerializer
+    permission_classes = (AuthPermissions.IsAuthenticated, )
+    
+    def get_queryset(self):
+        queryset = ProjectTaskComment.objects.filter(project_task__pk=self.kwargs['task_pk'])
+        return queryset
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        project_task = ProjectTask.objects.filter(pk=self.kwargs['task_pk']).first()
+        context['project_task'] = project_task
+        return context
+    
+class ProjectTaskAssigneeViewset(viewsets.ModelViewSet):
+    queryset = ProjectTaskAssignment.objects.all()
+    serializer_class = ProjectTaskAssigneeSerializer
+    permission_classes = (AuthPermissions.IsAuthenticated, )
+    
+    def get_queryset(self):
+        queryset = ProjectTaskAssignment.objects.filter(project_task__pk=self.kwargs['task_pk'])
+        return queryset
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        project_task = ProjectTask.objects.filter(pk=self.kwargs['task_pk']).first()
+        context['project_task'] = project_task
+        return context

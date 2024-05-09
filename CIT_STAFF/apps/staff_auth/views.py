@@ -1,6 +1,5 @@
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from django.forms import ValidationError
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
@@ -13,7 +12,6 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import login, logout
 from apps.staff_auth import permission_handler as MyPermissions
-from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_bytes
 

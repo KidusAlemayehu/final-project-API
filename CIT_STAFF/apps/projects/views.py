@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import *
 from apps.staff_auth import permission_handler as AuthPermissions
+import apps.projects.permissions as ProjectPermission
 from apps.staff_user.models import StaffUser
 
 # Create your views here.
@@ -57,8 +58,9 @@ class ProjectAccessRoleTableViewset(viewsets.ModelViewSet):
 
 class ProjectTaskViewset(viewsets.ModelViewSet):
     queryset = ProjectTask.objects.all()
-    serializer_class = ProjectTaskSerializer
     permission_classes = (AuthPermissions.IsAuthenticated, )
+    serializer_class = ProjectTaskSerializer
+    
     
     def get_queryset(self):
         queryset = ProjectTask.objects.filter(project__pk=self.kwargs['project_pk'])
@@ -76,13 +78,14 @@ class ProjectTaskCommentViewset(viewsets.ModelViewSet):
     permission_classes = (AuthPermissions.IsAuthenticated, )
     
     def get_queryset(self):
-        queryset = ProjectTaskComment.objects.filter(project_task__pk=self.kwargs['task_pk'])
+        queryset = ProjectTaskComment.objects.filter(task__pk=self.kwargs['task_pk'])
         return queryset
     
     def get_serializer_context(self):
         context = super().get_serializer_context()
         project_task = ProjectTask.objects.filter(pk=self.kwargs['task_pk']).first()
         context['project_task'] = project_task
+        context['commented_by'] = self.request.user
         return context
     
 class ProjectTaskAssigneeViewset(viewsets.ModelViewSet):
@@ -91,7 +94,7 @@ class ProjectTaskAssigneeViewset(viewsets.ModelViewSet):
     permission_classes = (AuthPermissions.IsAuthenticated, )
     
     def get_queryset(self):
-        queryset = ProjectTaskAssignment.objects.filter(project_task__pk=self.kwargs['task_pk'])
+        queryset = ProjectTaskAssignment.objects.filter(task__pk=self.kwargs['task_pk'])
         return queryset
     
     def get_serializer_context(self):

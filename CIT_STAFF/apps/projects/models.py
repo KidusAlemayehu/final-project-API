@@ -21,7 +21,7 @@ class Project(models.Model):
     
 class ProjectAccessTable(models.Model):
     id = models.BigAutoField(primary_key=True, unique=True, db_index=True, null=False)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name="Project", blank=False, null=False)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name="Project", blank=False, null=False, related_name="access_table")
     
     class Meta:
         db_table = 'project_access_table'
@@ -35,7 +35,7 @@ class ACCESS_ROLE_CHOICES(models.TextChoices):
     
 class ProjectAccessRoleTable(models.Model):
     id = models.BigAutoField(primary_key=True, unique=True, db_index=True, null=False)
-    project_access_table = models.ForeignKey(ProjectAccessTable, null=False, on_delete=models.CASCADE, verbose_name="Project Access Table", blank=False)
+    project_access_table = models.ForeignKey(ProjectAccessTable, null=False, on_delete=models.CASCADE, verbose_name="Project Access Table", blank=False, related_name="access_role_table")
     user = models.ForeignKey(StaffUser, null=False, on_delete=models.CASCADE, verbose_name="Staff User", blank=False)
     access_role = models.CharField(max_length=20, choices=ACCESS_ROLE_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -56,7 +56,7 @@ class ProjectTask(models.Model):
     id = models.BigAutoField(primary_key=True, unique=True, db_index=True, null=False)
     name = models.CharField(max_length=100, verbose_name='Task Name', blank=False, null=False)
     description = models.TextField(verbose_name="Task Description (Optional)", blank=True, null=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name="Project", blank=False, null=False)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name="Project", blank=False, null=False, related_name="tasks")
     task_weight = models.FloatField(verbose_name="Task Weight Value", null=True, blank=True)
     progress = models.CharField(max_length=50, choices=PROJECT_TASK_PROGRESS_CHOICES, default=PROJECT_TASK_PROGRESS_CHOICES.OPEN)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -71,7 +71,8 @@ class ProjectTask(models.Model):
 class ProjectTaskComment(models.Model):
     id = models.BigAutoField(primary_key=True, unique=True, db_index=True, null=False)
     comment = models.TextField(blank=True, max_length=500)
-    task = models.ForeignKey(ProjectTask, related_name="commented_on", on_delete=models.SET_NULL, null=True)
+    task = models.ForeignKey(ProjectTask, related_name="comments", on_delete=models.SET_NULL, null=True)
+    commented_by = models.ForeignKey(StaffUser, related_name="commentor", on_delete=models.SET_NULL, null=True)
     
     class Meta:
         db_table = 'project_task_comment'
@@ -86,7 +87,7 @@ class ProjectTaskDependency(models.Model):
         
 class ProjectTaskAssignment(models.Model):
     id = models.BigAutoField(primary_key=True, unique=True, db_index=True, null=False)
-    task = models.ForeignKey(ProjectTask, null=True, on_delete=models.SET_NULL)
+    task = models.ForeignKey(ProjectTask, null=True, on_delete=models.SET_NULL, related_name="assignee")
     assignee = models.ForeignKey(StaffUser, null=True, on_delete=models.SET_NULL)
     
     class Meta:
@@ -98,7 +99,7 @@ def attachment_path(instance, filename):
 class ProjectTaskAttachment(models.Model):
     id = models.BigAutoField(primary_key=True, db_index=True, unique=True, null=False)
     attachment = models.FileField(upload_to=attachment_path)
-    task = models.ForeignKey(ProjectTask, null=True, on_delete=models.SET_NULL)
+    task = models.ForeignKey(ProjectTask, null=True, on_delete=models.SET_NULL, related_name="attachment")
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     

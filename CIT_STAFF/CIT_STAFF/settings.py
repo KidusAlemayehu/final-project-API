@@ -58,6 +58,9 @@ INSTALLED_APPS = [
     'apps.staff_auth',
     'apps.staff_user',
     'apps.projects',
+    'apps.attendance',
+    'apps.event_schedule',
+    'apps.notifications',
 ]
 
 REST_FRAMEWORK = {

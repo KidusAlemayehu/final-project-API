@@ -4,7 +4,11 @@ from .models import *
 class NestedParentSerializer:
     def validate(self, data):
         pass
-    
+class ProjectTaskAttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectTaskAttachment
+        fields = ('id', 'attachment', 'created_at', 'updated_at')
+            
 class ProjectTaskCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectTaskComment
@@ -18,9 +22,10 @@ class ProjectTaskCommentSerializer(serializers.ModelSerializer):
     
 class ProjectTaskSerializer(serializers.ModelSerializer):
     comments = ProjectTaskCommentSerializer(many=True, read_only=True)
+    attachment = ProjectTaskAttachmentSerializer(many=True, read_only=True)
     class Meta:
         model = ProjectTask
-        fields = ['id', 'name', 'description', 'project', 'task_weight', 'created_at', 'updated_at', 'progress', 'comments']
+        fields = ['id', 'name', 'description', 'project', 'task_weight', 'progress', 'comments', 'attachment', 'created_at', 'updated_at']
         read_only_fields = ['project', 'created_at', 'updated_at', 'progress']
         
     def validate(self, attrs):

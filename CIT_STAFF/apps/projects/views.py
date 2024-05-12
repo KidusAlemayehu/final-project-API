@@ -18,11 +18,21 @@ class ProjectViewset(viewsets.ModelViewSet):
         context = super().get_serializer_context()
         context['owner'] = user
         return context
+    
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update']:
+            permission_classes = [ProjectPermission.CreatePermission, ProjectPermission.UpdatePermission, ProjectPermission.DeletePermission]
+        elif self.action == 'destroy':
+            permission_classes = [ProjectPermission.ProjectDeletePermission]
+        else:
+            permission_classes = [ProjectPermission.ReadPermission]
+            
+        return [permission() for permission in permission_classes]
 
 class ProjectAccessTableViewset(viewsets.ReadOnlyModelViewSet):
     queryset = ProjectAccessTable.objects.all()
     serializer_class = ProjectAccessTableSerializer   
-    permission_classes = (AuthPermissions.IsAuthenticated, ) 
+    permission_classes = (ProjectPermission.ReadPermission,)
     
     def get_queryset(self):
         queryset = ProjectAccessTable.objects.filter(project__pk=self.kwargs['project_pk'])
@@ -38,12 +48,19 @@ class ProjectAccessTableViewset(viewsets.ReadOnlyModelViewSet):
 class ProjectAccessRoleTableViewset(viewsets.ModelViewSet):
     queryset = ProjectAccessRoleTable.objects.all()
     serializer_class = ProjectAccessRoleTableSerializer
-    permission_classes = (AuthPermissions.IsAuthenticated, )
     
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['project_access_table'] = ProjectAccessTable.objects.filter(pk=self.kwargs['access_table_pk']).first()
         return context
+    
+    def get_permissions(self):
+        if self.action in ['create', 'destroy', 'update', 'partial_update']:
+            permission_classes = [ProjectPermission.CreatePermission, ProjectPermission.UpdatePermission, ProjectPermission.DeletePermission]
+        else:
+            permission_classes = [ProjectPermission.ReadPermission]
+            
+        return [permission() for permission in permission_classes]
     
     def get_queryset(self):
         queryset = ProjectAccessRoleTable.objects.filter(project_access_table__pk=self.kwargs['access_table_pk'], project_access_table__project__pk=self.kwargs['project_pk'])
@@ -58,7 +75,6 @@ class ProjectAccessRoleTableViewset(viewsets.ModelViewSet):
 
 class ProjectTaskViewset(viewsets.ModelViewSet):
     queryset = ProjectTask.objects.all()
-    permission_classes = (AuthPermissions.IsAuthenticated, )
     serializer_class = ProjectTaskSerializer
     
     
@@ -72,14 +88,36 @@ class ProjectTaskViewset(viewsets.ModelViewSet):
         context['project'] = project
         return context
     
+    def get_permissions(self):
+        if self.action in ['create', 'destroy', 'update', 'partial_update']:
+            permission_classes = [ProjectPermission.CreatePermission, ProjectPermission.UpdatePermission, ProjectPermission.DeletePermission]
+        else:
+            permission_classes = [ProjectPermission.ReadPermission]
+            
+        return [permission() for permission in permission_classes]
+    
 class ProjectTaskCommentViewset(viewsets.ModelViewSet):
     queryset = ProjectTaskComment.objects.all()
     serializer_class = ProjectTaskCommentSerializer
-    permission_classes = (AuthPermissions.IsAuthenticated, )
     
     def get_queryset(self):
         queryset = ProjectTaskComment.objects.filter(task__pk=self.kwargs['task_pk'])
         return queryset
+    
+    def get_permissions(self):
+        if self.action  == 'create':
+            permission_classes = [ProjectPermission.CommentCreatePermission]
+        elif self.action in ['update', 'partial_update']:
+            permission_classes = [ProjectPermission.CommentUpdatePermission]
+            
+        elif self.action in ['list', 'retrieve']:
+            permission_classes = [ProjectPermission.CommentReadPermission]
+        elif self.action == 'destroy':
+            permission_classes = [ProjectPermission.CommentDeletePermission]
+        else:
+            permission_classes = [ProjectPermission.CommentReadPermission]
+            
+        return [permission() for permission in permission_classes]
     
     def get_serializer_context(self):
         context = super().get_serializer_context()

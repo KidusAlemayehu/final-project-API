@@ -23,6 +23,7 @@ from rest_framework import permissions
 from apps.staff_user import urls as StaffUrls
 from apps.staff_auth import urls as AuthUrls
 from apps.projects import urls as ProjectUrls
+from apps.event_schedule import urls as EventScheduleUrls
 
 
 schema_view = get_schema_view(
@@ -39,5 +40,6 @@ urlpatterns = [
     path('', include(StaffUrls)),
     path('auth/', include(AuthUrls)),
     path('', include(ProjectUrls)),
+    path('', include(EventScheduleUrls)),
 ]
 

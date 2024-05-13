@@ -33,7 +33,7 @@ class ProjectTaskSerializer(serializers.ModelSerializer):
         return attrs
 
 class ProjectAccessRoleTableSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()
+    # user = serializers.StringRelatedField()
     class Meta:
         model = ProjectAccessRoleTable
         fields = '__all__'

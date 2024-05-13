@@ -16,6 +16,15 @@ class CreatePermission(BasePermission):
             return True
         return False
     
+class ListPermission(BasePermission):
+    def has_permission(self, request, view):
+        project_pk = view.kwargs.get('project_pk')
+        project = Project.objects.filter(pk=project_pk).first()
+        role_table = ProjectAccessRoleTable.objects.filter(project_access_table__project=project, user=request.user).first()
+        if role_table.access_role in ['Owner', 'Contributor', 'Commenter', 'Viewer']:
+            return True
+        return False
+        
 class ReadPermission(BasePermission):
     message = "Permission Denied: You are not allowed to perform a view action!"
     
@@ -23,7 +32,7 @@ class ReadPermission(BasePermission):
         project_pk = view.kwargs.get('project_pk')
         project = Project.objects.filter(pk=project_pk).first()
         role_table = ProjectAccessRoleTable.objects.filter(project_access_table__project=project, user=request.user).first()
-        if role_table:
+        if role_table.access_role in ['Owner', 'Contributor', 'Commenter', 'Viewer']:
             return True
         return False
     
@@ -49,14 +58,33 @@ class DeletePermission(BasePermission):
             return True
         return False
     
+    
+class ProjectListPermission(BasePermission):
+    message = "Permission Denied: You are not allowed to perform a view action!"
+    
+    def has_permission(self, request, view):
+        # If the user is not authenticated, deny permission
+        if not request.user.is_authenticated:
+            return False
+        
+        # Get the user's roles from the ProjectAccessRoleTable
+        user_roles = ProjectAccessRoleTable.objects.filter(user=request.user)
+        
+        # Get the project ids associated with the user's roles
+        project_ids = user_roles.values_list('project_access_table__project__pk', flat=True)
+        
+        # Filter projects based on the user's roles
+        projects = Project.objects.filter(pk__in=project_ids)
+        
+        # If the user has access to any projects, allow permission
+        return projects.exists()
+        
 class ProjectDeletePermission(BasePermission):
     message = "Permission Denied: You are not allowed to perform a delete action on this project!"
     
     def has_permission(self, request, view):
-        project_pk = view.kwargs.get('project_pk')
-        project = Project.objects.filter(pk=project_pk).first()
-        role_table = ProjectAccessRoleTable.objects.filter(project_access_table__project=project, user=request.user).first()
-        if role_table.access_role == "Owner":
+        role_table = ProjectAccessRoleTable.objects.filter(project_access_table__project=view.get_object(), user=request.user, access_role='Owner').first()
+        if role_table:
             return True
         return False
     
@@ -91,7 +119,7 @@ class CommentUpdatePermission(BasePermission):
         role_table = ProjectAccessRoleTable.objects.filter(project_access_table__project=project, user=request.user).first()
         comment = view.get_object()
         
-        if role_table.access_role == "Commenter" and comment.objects.filter(pk=view.kwargs.get('comment_pk'), commented_by=request.user).exists():
+        if comment.commented_by == request.user:
             return True
         return False 
 

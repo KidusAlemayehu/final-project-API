@@ -14,6 +14,7 @@ from django.contrib.auth import login, logout
 from apps.staff_auth import permission_handler as MyPermissions
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_bytes
+from apps.staff_user.serializers import UserSerializer
 
 
 # Create your views here.
@@ -47,6 +48,14 @@ class LogoutAPIView(APIView):
             return Response({"message":"logout successfully"}, status=status.HTTP_200_OK)
         else:
             return Response({"message":"user is not authenticated"}, status=status.HTTP_403_FORBIDDEN)
+        
+class GetCurrentUserView(APIView):
+    serializer_class = UserSerializer
+    permission_classes = [MyPermissions.IsAuthenticated]
+    
+    def get(self, request, *args, **kwargs):
+        user = get_user_model().objects.filter(pk=request.user.pk).first()
+        return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
 
 
 class ChangePasswordView(APIView):
@@ -72,8 +81,8 @@ class SetChangePasswordView(APIView):
         token = request.GET.get('token')
         user_model = get_user_model()
 
-        new_password = request.data["password"]
-        confirm_password = request.data["confirm_password"]
+        new_password = request.data.get("password")
+        confirm_password = request.data.get("confirmPassword")
         
         if new_password and confirm_password:
             if new_password!= confirm_password:

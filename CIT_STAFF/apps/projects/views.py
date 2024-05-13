@@ -11,7 +11,6 @@ from apps.staff_user.models import StaffUser
 class ProjectViewset(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = (AuthPermissions.IsAuthenticated,)
     
     def get_serializer_context(self):
         user = StaffUser.objects.filter(pk=self.request.user.pk).first()
@@ -19,25 +18,49 @@ class ProjectViewset(viewsets.ModelViewSet):
         context['owner'] = user
         return context
     
+    def get_queryset(self):
+        # Get the user's roles from the ProjectAccessRoleTable
+        user_roles = self.request.user.projectaccessroletable_set.all()
+        
+        # Get the project ids associated with the user's roles
+        project_ids = user_roles.values_list('project_access_table__project', flat=True)
+        
+        # Filter projects based on the user's roles
+        projects = Project.objects.filter(id__in=project_ids).distinct()
+        
+        return projects
+    
     def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update']:
-            permission_classes = [ProjectPermission.CreatePermission, ProjectPermission.UpdatePermission, ProjectPermission.DeletePermission]
+        if self.action == 'create':
+            permission_classes = [AuthPermissions.IsHOD |  AuthPermissions.IsPGCoordinator | AuthPermissions.IsUGCoordinator]
+        elif self.action in ['update', 'partial_update']:
+            permission_classes = [ProjectPermission.UpdatePermission]
         elif self.action == 'destroy':
             permission_classes = [ProjectPermission.ProjectDeletePermission]
-        else:
+        elif self.action == 'retrieve':
             permission_classes = [ProjectPermission.ReadPermission]
+        elif self.action == 'list':
+            permission_classes = [ProjectPermission.ProjectListPermission]
+        else:
+            permission_classes = [AuthPermissions.IsHOD]
             
         return [permission() for permission in permission_classes]
 
 class ProjectAccessTableViewset(viewsets.ReadOnlyModelViewSet):
     queryset = ProjectAccessTable.objects.all()
     serializer_class = ProjectAccessTableSerializer   
-    permission_classes = (ProjectPermission.ReadPermission,)
+    permission_classes = [ProjectPermission.ListPermission]
     
     def get_queryset(self):
         queryset = ProjectAccessTable.objects.filter(project__pk=self.kwargs['project_pk'])
         return queryset
-    
+    # def get_permissions(self):
+    #     if self.action == 'list':
+    #         permission_classes = [ProjectPermission.ListPermission]
+    #     else:
+    #         permission_classes = [ProjectPermission.ReadPermission]
+            
+        return [permission() for permission in permission_classes]
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         if len(queryset) == 0:
@@ -57,7 +80,9 @@ class ProjectAccessRoleTableViewset(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['create', 'destroy', 'update', 'partial_update']:
             permission_classes = [ProjectPermission.CreatePermission, ProjectPermission.UpdatePermission, ProjectPermission.DeletePermission]
-        else:
+        elif self.action == 'list':
+            permission_classes = [ProjectPermission.ListPermission]
+        elif self.action == 'retrieve':
             permission_classes = [ProjectPermission.ReadPermission]
             
         return [permission() for permission in permission_classes]
@@ -91,6 +116,10 @@ class ProjectTaskViewset(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['create', 'destroy', 'update', 'partial_update']:
             permission_classes = [ProjectPermission.CreatePermission, ProjectPermission.UpdatePermission, ProjectPermission.DeletePermission]
+        elif self.action == 'list':
+            permission_classes = [ProjectPermission.ListPermission]
+        elif self.action == 'retreieve':
+            permission_classes = [ProjectPermission.ReadPermission]
         else:
             permission_classes = [ProjectPermission.ReadPermission]
             
@@ -140,3 +169,4 @@ class ProjectTaskAssigneeViewset(viewsets.ModelViewSet):
         project_task = ProjectTask.objects.filter(pk=self.kwargs['task_pk']).first()
         context['project_task'] = project_task
         return context
+    

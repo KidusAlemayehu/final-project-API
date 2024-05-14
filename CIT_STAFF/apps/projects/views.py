@@ -22,8 +22,13 @@ class ProjectViewset(viewsets.ModelViewSet):
         # Get the user's roles from the ProjectAccessRoleTable
         user_roles = self.request.user.projectaccessroletable_set.all()
         
-        # Get the project ids associated with the user's roles
-        project_ids = user_roles.values_list('project_access_table__project', flat=True)
+        project_ids = user_roles.values_list('project_access_table__project', flat=True) 
+        
+        # Get the tasks assigned to the current user
+        assignee_roles = self.request.user.projecttaskassignment_set.all().values_list('task__project', flat=True)
+        
+        # Combine project ids from user roles and assigned tasks
+        project_ids = list(set(project_ids) | set(assignee_roles))
         
         # Filter projects based on the user's roles
         projects = Project.objects.filter(id__in=project_ids).distinct()
@@ -40,7 +45,7 @@ class ProjectViewset(viewsets.ModelViewSet):
         elif self.action == 'retrieve':
             permission_classes = [ProjectPermission.ReadPermission]
         elif self.action == 'list':
-            permission_classes = [ProjectPermission.ProjectListPermission]
+            permission_classes = [AuthPermissions.IsAuthenticated]
         else:
             permission_classes = [AuthPermissions.IsHOD]
             

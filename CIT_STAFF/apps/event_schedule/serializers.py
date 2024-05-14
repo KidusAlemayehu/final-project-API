@@ -7,7 +7,7 @@ class EventScheduleInvitationSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventInvitation
         fields = ('id', 'event_schedule', 'invited_by', 'invited', 'created_at', 'updated_at')
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'event_schedule', 'invited_by']
         
     def validate(self, attrs):
         attrs['event_schedule'] = self.context.get('event_schedule')

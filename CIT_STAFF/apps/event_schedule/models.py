@@ -20,6 +20,8 @@ class EventInvitation(models.Model):
     event_schedule = models.ForeignKey(EventSchedule, on_delete=models.CASCADE)
     invited_by = models.ForeignKey(StaffUser, on_delete=models.SET_NULL, null=True, related_name='invited_by')
     invited = models.ForeignKey(StaffUser, on_delete=models.SET_NULL, null=True, related_name='invited')
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     
     class Meta:
         db_table = "Event_Invitation"

@@ -52,24 +52,35 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',       # Swagger 
     'drf_yasg',
+    'drf_spectacular',
     'rest_framework.authtoken',
     'corsheaders',
+    'notifications',
     'django_rest_passwordreset',
     'apps.staff_auth',
     'apps.staff_user',
     'apps.projects',
     'apps.attendance',
     'apps.event_schedule',
-    'apps.notifications',
+    'apps.custom_notification',
 ]
 
 REST_FRAMEWORK = {
       'DEFAULT_AUTHENTICATION_CLASSES': [
         "apps.staff_auth.token.ExpiringTokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-    ]
+        
+    ],
+      'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'DRF APIs Documentation',
+    'DESCRIPTION': 'Documenting your APIs',
+    'VERSION': '1.0.0',
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SERVE_INCLUDE_SCHEMA': False,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

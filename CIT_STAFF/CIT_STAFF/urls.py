@@ -19,11 +19,13 @@ from django.urls import path, include
 from rest_framework_swagger.views import get_swagger_view
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from rest_framework import permissions
 from apps.staff_user import urls as StaffUrls
 from apps.staff_auth import urls as AuthUrls
 from apps.projects import urls as ProjectUrls
 from apps.event_schedule import urls as EventScheduleUrls
+from apps.custom_notification import urls as NotificationUrls
 
 
 schema_view = get_schema_view(
@@ -37,9 +39,11 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0),name='schema-swagger-ui'),
+    path('api/docs/schema', SpectacularAPIView.as_view(), name='schema'),
     path('', include(StaffUrls)),
     path('auth/', include(AuthUrls)),
     path('', include(ProjectUrls)),
     path('', include(EventScheduleUrls)),
+    path('', include(NotificationUrls)),
 ]
 

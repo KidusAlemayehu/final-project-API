@@ -1,0 +1,3319 @@
+openapi: 3.0.3
+info:
+  title: DRF APIs Documentation
+  version: 1.0.0
+  description: Documenting your APIs
+paths:
+  /auth/change_password/:
+    get:
+      operationId: auth_change_password_retrieve
+      tags:
+      - auth
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /auth/get_profile/:
+    get:
+      operationId: auth_get_profile_retrieve
+      tags:
+      - auth
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /auth/login/:
+    post:
+      operationId: auth_login_create
+      description: An endpoint to authenticate existing users using their email and
+        password.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+          description: ''
+  /auth/logout/:
+    post:
+      operationId: auth_logout_create
+      tags:
+      - auth
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /auth/password_reset/:
+    post:
+      operationId: auth_password_reset_create
+      description: |-
+        An Api View which provides a method to request a password reset token based on an e-mail address
+
+        Sends a signal reset_password_token_created when a reset token was created
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Email'
+          description: ''
+  /auth/password_reset/confirm/:
+    post:
+      operationId: auth_password_reset_confirm_create
+      description: An Api View which provides a method to reset a password based on
+        a unique token
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordTokenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordTokenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordTokenRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordToken'
+          description: ''
+  /auth/password_reset/validate_token/:
+    post:
+      operationId: auth_password_reset_validate_token_create
+      description: An Api View which provides a method to verify that a token is valid
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetTokenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ResetTokenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ResetTokenRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResetToken'
+          description: ''
+  /auth/set_password/:
+    put:
+      operationId: auth_set_password_update
+      description: Allows resetting password using a unique link
+      tags:
+      - auth
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /event_schedule/:
+    get:
+      operationId: event_schedule_list
+      tags:
+      - event_schedule
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventSchedule'
+          description: ''
+    post:
+      operationId: event_schedule_create
+      tags:
+      - event_schedule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventScheduleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EventScheduleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EventScheduleRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventSchedule'
+          description: ''
+  /event_schedule/{event_schedule_pk}/invitation/:
+    get:
+      operationId: event_schedule_invitation_list
+      parameters:
+      - in: path
+        name: event_schedule_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - event_schedule
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventScheduleInvitation'
+          description: ''
+    post:
+      operationId: event_schedule_invitation_create
+      parameters:
+      - in: path
+        name: event_schedule_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - event_schedule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventScheduleInvitationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EventScheduleInvitationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EventScheduleInvitationRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventScheduleInvitation'
+          description: ''
+  /event_schedule/{event_schedule_pk}/invitation/{id}/:
+    get:
+      operationId: event_schedule_invitation_retrieve
+      parameters:
+      - in: path
+        name: event_schedule_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this event invitation.
+        required: true
+      tags:
+      - event_schedule
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventScheduleInvitation'
+          description: ''
+    put:
+      operationId: event_schedule_invitation_update
+      parameters:
+      - in: path
+        name: event_schedule_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this event invitation.
+        required: true
+      tags:
+      - event_schedule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventScheduleInvitationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EventScheduleInvitationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EventScheduleInvitationRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventScheduleInvitation'
+          description: ''
+    patch:
+      operationId: event_schedule_invitation_partial_update
+      parameters:
+      - in: path
+        name: event_schedule_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this event invitation.
+        required: true
+      tags:
+      - event_schedule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedEventScheduleInvitationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedEventScheduleInvitationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedEventScheduleInvitationRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventScheduleInvitation'
+          description: ''
+    delete:
+      operationId: event_schedule_invitation_destroy
+      parameters:
+      - in: path
+        name: event_schedule_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this event invitation.
+        required: true
+      tags:
+      - event_schedule
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /event_schedule/{id}/:
+    get:
+      operationId: event_schedule_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this event schedule.
+        required: true
+      tags:
+      - event_schedule
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventSchedule'
+          description: ''
+    put:
+      operationId: event_schedule_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this event schedule.
+        required: true
+      tags:
+      - event_schedule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventScheduleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EventScheduleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EventScheduleRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventSchedule'
+          description: ''
+    patch:
+      operationId: event_schedule_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this event schedule.
+        required: true
+      tags:
+      - event_schedule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedEventScheduleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedEventScheduleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedEventScheduleRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventSchedule'
+          description: ''
+    delete:
+      operationId: event_schedule_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this event schedule.
+        required: true
+      tags:
+      - event_schedule
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /notifications/:
+    get:
+      operationId: notifications_list
+      tags:
+      - notifications
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notifications'
+          description: ''
+    post:
+      operationId: notifications_create
+      tags:
+      - notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NotificationsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NotificationsRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notifications'
+          description: ''
+  /notifications/{id}/:
+    get:
+      operationId: notifications_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Notification.
+        required: true
+      tags:
+      - notifications
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notifications'
+          description: ''
+    put:
+      operationId: notifications_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Notification.
+        required: true
+      tags:
+      - notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NotificationsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NotificationsRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notifications'
+          description: ''
+    patch:
+      operationId: notifications_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Notification.
+        required: true
+      tags:
+      - notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificationsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificationsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificationsRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notifications'
+          description: ''
+    delete:
+      operationId: notifications_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Notification.
+        required: true
+      tags:
+      - notifications
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /offices/:
+    get:
+      operationId: offices_list
+      tags:
+      - offices
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Office'
+          description: ''
+    post:
+      operationId: offices_create
+      tags:
+      - offices
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfficeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OfficeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OfficeRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Office'
+          description: ''
+  /offices/{id}/:
+    get:
+      operationId: offices_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this office.
+        required: true
+      tags:
+      - offices
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Office'
+          description: ''
+    put:
+      operationId: offices_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this office.
+        required: true
+      tags:
+      - offices
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfficeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OfficeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OfficeRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Office'
+          description: ''
+    patch:
+      operationId: offices_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this office.
+        required: true
+      tags:
+      - offices
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedOfficeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedOfficeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedOfficeRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Office'
+          description: ''
+    delete:
+      operationId: offices_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this office.
+        required: true
+      tags:
+      - offices
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /project/:
+    get:
+      operationId: project_list
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+          description: ''
+    post:
+      operationId: project_create
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+  /project/{id}/:
+    get:
+      operationId: project_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    put:
+      operationId: project_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    patch:
+      operationId: project_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    delete:
+      operationId: project_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project.
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /project/{project_pk}/access_table/:
+    get:
+      operationId: project_access_table_list
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectAccessTable'
+          description: ''
+  /project/{project_pk}/access_table/{access_table_pk}/role_table/:
+    get:
+      operationId: project_access_table_role_table_list
+      parameters:
+      - in: path
+        name: access_table_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectAccessRoleTable'
+          description: ''
+    post:
+      operationId: project_access_table_role_table_create
+      parameters:
+      - in: path
+        name: access_table_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectAccessRoleTableRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectAccessRoleTableRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectAccessRoleTableRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectAccessRoleTable'
+          description: ''
+  /project/{project_pk}/access_table/{access_table_pk}/role_table/{id}/:
+    get:
+      operationId: project_access_table_role_table_retrieve
+      parameters:
+      - in: path
+        name: access_table_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project access role table.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectAccessRoleTable'
+          description: ''
+    put:
+      operationId: project_access_table_role_table_update
+      parameters:
+      - in: path
+        name: access_table_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project access role table.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectAccessRoleTableRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectAccessRoleTableRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectAccessRoleTableRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectAccessRoleTable'
+          description: ''
+    patch:
+      operationId: project_access_table_role_table_partial_update
+      parameters:
+      - in: path
+        name: access_table_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project access role table.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectAccessRoleTableRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectAccessRoleTableRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectAccessRoleTableRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectAccessRoleTable'
+          description: ''
+    delete:
+      operationId: project_access_table_role_table_destroy
+      parameters:
+      - in: path
+        name: access_table_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project access role table.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /project/{project_pk}/access_table/{id}/:
+    get:
+      operationId: project_access_table_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project access table.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectAccessTable'
+          description: ''
+  /project/{project_pk}/task/:
+    get:
+      operationId: project_task_list
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectTask'
+          description: ''
+    post:
+      operationId: project_task_create
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectTask'
+          description: ''
+  /project/{project_pk}/task/{id}/:
+    get:
+      operationId: project_task_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project task.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectTask'
+          description: ''
+    put:
+      operationId: project_task_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project task.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectTask'
+          description: ''
+    patch:
+      operationId: project_task_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project task.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectTaskRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectTaskRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectTaskRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectTask'
+          description: ''
+    delete:
+      operationId: project_task_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project task.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /project/{project_pk}/task/{task_pk}/assignee/:
+    get:
+      operationId: project_task_assignee_list
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: task_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectTaskAssignee'
+          description: ''
+    post:
+      operationId: project_task_assignee_create
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: task_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskAssigneeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskAssigneeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskAssigneeRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectTaskAssignee'
+          description: ''
+  /project/{project_pk}/task/{task_pk}/assignee/{id}/:
+    get:
+      operationId: project_task_assignee_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project task assignment.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: task_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectTaskAssignee'
+          description: ''
+    put:
+      operationId: project_task_assignee_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project task assignment.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: task_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskAssigneeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskAssigneeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskAssigneeRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectTaskAssignee'
+          description: ''
+    patch:
+      operationId: project_task_assignee_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project task assignment.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: task_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectTaskAssigneeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectTaskAssigneeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectTaskAssigneeRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectTaskAssignee'
+          description: ''
+    delete:
+      operationId: project_task_assignee_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project task assignment.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: task_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /project/{project_pk}/task/{task_pk}/comment/:
+    get:
+      operationId: project_task_comment_list
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: task_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectTaskComment'
+          description: ''
+    post:
+      operationId: project_task_comment_create
+      parameters:
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: task_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskCommentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskCommentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskCommentRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectTaskComment'
+          description: ''
+  /project/{project_pk}/task/{task_pk}/comment/{id}/:
+    get:
+      operationId: project_task_comment_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project task comment.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: task_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectTaskComment'
+          description: ''
+    put:
+      operationId: project_task_comment_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project task comment.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: task_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskCommentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskCommentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectTaskCommentRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectTaskComment'
+          description: ''
+    patch:
+      operationId: project_task_comment_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project task comment.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: task_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectTaskCommentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectTaskCommentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectTaskCommentRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectTaskComment'
+          description: ''
+    delete:
+      operationId: project_task_comment_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this project task comment.
+        required: true
+      - in: path
+        name: project_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: task_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - project
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /roles/:
+    get:
+      operationId: roles_list
+      tags:
+      - roles
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+          description: ''
+    post:
+      operationId: roles_create
+      tags:
+      - roles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RoleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RoleRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+          description: ''
+  /roles/{id}/:
+    get:
+      operationId: roles_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this roles.
+        required: true
+      tags:
+      - roles
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+          description: ''
+    put:
+      operationId: roles_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this roles.
+        required: true
+      tags:
+      - roles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RoleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RoleRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+          description: ''
+    patch:
+      operationId: roles_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this roles.
+        required: true
+      tags:
+      - roles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRoleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRoleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRoleRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+          description: ''
+    delete:
+      operationId: roles_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this roles.
+        required: true
+      tags:
+      - roles
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /sections/:
+    get:
+      operationId: sections_list
+      tags:
+      - sections
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Section'
+          description: ''
+    post:
+      operationId: sections_create
+      tags:
+      - sections
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SectionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SectionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SectionRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Section'
+          description: ''
+  /sections/{id}/:
+    get:
+      operationId: sections_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this section.
+        required: true
+      tags:
+      - sections
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Section'
+          description: ''
+    put:
+      operationId: sections_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this section.
+        required: true
+      tags:
+      - sections
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SectionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SectionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SectionRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Section'
+          description: ''
+    patch:
+      operationId: sections_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this section.
+        required: true
+      tags:
+      - sections
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSectionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSectionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSectionRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Section'
+          description: ''
+    delete:
+      operationId: sections_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this section.
+        required: true
+      tags:
+      - sections
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /users/:
+    get:
+      operationId: users_list
+      tags:
+      - users
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+          description: ''
+    post:
+      operationId: users_create
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /users/{id}/:
+    get:
+      operationId: users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this staff user.
+        required: true
+      tags:
+      - users
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this staff user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this staff user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: users_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this staff user.
+        required: true
+      tags:
+      - users
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    AccessRoleEnum:
+      enum:
+      - Owner
+      - Contributor
+      - Viewer
+      - Commenter
+      type: string
+      description: |-
+        * `Owner` - Owner
+        * `Contributor` - Contributor
+        * `Viewer` - Viewer
+        * `Commenter` - Commenter
+    Email:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
+    EmailRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+      required:
+      - email
+    EventSchedule:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        subject:
+          type: string
+          maxLength: 150
+        description:
+          type: string
+          nullable: true
+        schedule_time:
+          type: string
+          format: date-time
+        created_by:
+          type: integer
+          readOnly: true
+          nullable: true
+        link:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - created_at
+      - created_by
+      - id
+      - schedule_time
+      - subject
+      - updated_at
+    EventScheduleInvitation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        event_schedule:
+          type: integer
+          readOnly: true
+        invited_by:
+          type: integer
+          readOnly: true
+          nullable: true
+        invited:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - created_at
+      - event_schedule
+      - id
+      - invited_by
+      - updated_at
+    EventScheduleInvitationRequest:
+      type: object
+      properties:
+        invited:
+          type: integer
+          nullable: true
+    EventScheduleRequest:
+      type: object
+      properties:
+        subject:
+          type: string
+          minLength: 1
+          maxLength: 150
+        description:
+          type: string
+          nullable: true
+        schedule_time:
+          type: string
+          format: date-time
+        link:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+      required:
+      - schedule_time
+      - subject
+    GenderEnum:
+      enum:
+      - Male
+      - Female
+      type: string
+      description: |-
+        * `Male` - Male
+        * `Female` - Female
+    LevelEnum:
+      enum:
+      - success
+      - info
+      - warning
+      - error
+      type: string
+      description: |-
+        * `success` - success
+        * `info` - info
+        * `warning` - warning
+        * `error` - error
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 100
+        password:
+          type: string
+          maxLength: 20
+      required:
+      - password
+      - username
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 100
+        password:
+          type: string
+          minLength: 1
+          maxLength: 20
+      required:
+      - password
+      - username
+    Notifications:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        level:
+          $ref: '#/components/schemas/LevelEnum'
+        unread:
+          type: boolean
+        actor_object_id:
+          type: string
+          maxLength: 255
+        verb:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        target_object_id:
+          type: string
+          nullable: true
+          maxLength: 255
+        action_object_object_id:
+          type: string
+          nullable: true
+          maxLength: 255
+        timestamp:
+          type: string
+          format: date-time
+        public:
+          type: boolean
+        deleted:
+          type: boolean
+        emailed:
+          type: boolean
+        data:
+          type: string
+          nullable: true
+        recipient:
+          type: integer
+        actor_content_type:
+          type: integer
+        target_content_type:
+          type: integer
+          nullable: true
+        action_object_content_type:
+          type: integer
+          nullable: true
+      required:
+      - actor_content_type
+      - actor_object_id
+      - id
+      - recipient
+      - verb
+    NotificationsRequest:
+      type: object
+      properties:
+        level:
+          $ref: '#/components/schemas/LevelEnum'
+        unread:
+          type: boolean
+        actor_object_id:
+          type: string
+          minLength: 1
+          maxLength: 255
+        verb:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        target_object_id:
+          type: string
+          nullable: true
+          maxLength: 255
+        action_object_object_id:
+          type: string
+          nullable: true
+          maxLength: 255
+        timestamp:
+          type: string
+          format: date-time
+        public:
+          type: boolean
+        deleted:
+          type: boolean
+        emailed:
+          type: boolean
+        data:
+          type: string
+          nullable: true
+        recipient:
+          type: integer
+        actor_content_type:
+          type: integer
+        target_content_type:
+          type: integer
+          nullable: true
+        action_object_content_type:
+          type: integer
+          nullable: true
+      required:
+      - actor_content_type
+      - actor_object_id
+      - recipient
+      - verb
+    Office:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - created_at
+      - id
+      - name
+      - updated_at
+    OfficeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+      required:
+      - name
+    PasswordToken:
+      type: object
+      properties:
+        password:
+          type: string
+        token:
+          type: string
+      required:
+      - password
+      - token
+    PasswordTokenRequest:
+      type: object
+      properties:
+        password:
+          type: string
+          minLength: 1
+        token:
+          type: string
+          minLength: 1
+      required:
+      - password
+      - token
+    PatchedEventScheduleInvitationRequest:
+      type: object
+      properties:
+        invited:
+          type: integer
+          nullable: true
+    PatchedEventScheduleRequest:
+      type: object
+      properties:
+        subject:
+          type: string
+          minLength: 1
+          maxLength: 150
+        description:
+          type: string
+          nullable: true
+        schedule_time:
+          type: string
+          format: date-time
+        link:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+    PatchedNotificationsRequest:
+      type: object
+      properties:
+        level:
+          $ref: '#/components/schemas/LevelEnum'
+        unread:
+          type: boolean
+        actor_object_id:
+          type: string
+          minLength: 1
+          maxLength: 255
+        verb:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        target_object_id:
+          type: string
+          nullable: true
+          maxLength: 255
+        action_object_object_id:
+          type: string
+          nullable: true
+          maxLength: 255
+        timestamp:
+          type: string
+          format: date-time
+        public:
+          type: boolean
+        deleted:
+          type: boolean
+        emailed:
+          type: boolean
+        data:
+          type: string
+          nullable: true
+        recipient:
+          type: integer
+        actor_content_type:
+          type: integer
+        target_content_type:
+          type: integer
+          nullable: true
+        action_object_content_type:
+          type: integer
+          nullable: true
+    PatchedOfficeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+    PatchedProjectAccessRoleTableRequest:
+      type: object
+      properties:
+        access_role:
+          $ref: '#/components/schemas/AccessRoleEnum'
+        user:
+          type: integer
+          title: Staff User
+    PatchedProjectRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          title: Project Name
+          maxLength: 100
+        description:
+          type: string
+          nullable: true
+          title: Project Description (Optional)
+        expected_start_date:
+          type: string
+          format: date
+          nullable: true
+        expected_end_date:
+          type: string
+          format: date
+          nullable: true
+    PatchedProjectTaskAssigneeRequest:
+      type: object
+      properties:
+        assignee:
+          type: integer
+          nullable: true
+    PatchedProjectTaskCommentRequest:
+      type: object
+      properties:
+        comment:
+          type: string
+          maxLength: 500
+    PatchedProjectTaskRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          title: Task Name
+          maxLength: 100
+        description:
+          type: string
+          nullable: true
+          title: Task Description (Optional)
+        task_weight:
+          type: number
+          format: double
+          nullable: true
+          title: Task Weight Value
+    PatchedRoleRequest:
+      type: object
+      properties:
+        office:
+          type: string
+          minLength: 1
+        section:
+          type: string
+          nullable: true
+          minLength: 1
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        work_role:
+          $ref: '#/components/schemas/WorkRoleEnum'
+        user:
+          type: integer
+    PatchedSectionRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        office:
+          type: integer
+    PatchedUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 150
+        phone:
+          type: string
+          minLength: 1
+          maxLength: 20
+        gender:
+          $ref: '#/components/schemas/GenderEnum'
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleRequest'
+    ProgressEnum:
+      enum:
+      - Open
+      - Working
+      - Pending
+      - Overdue
+      - Completed
+      - Cancelled
+      type: string
+      description: |-
+        * `Open` - Open
+        * `Working` - Working
+        * `Pending` - Pending
+        * `Overdue` - Overdue
+        * `Completed` - Completed
+        * `Cancelled` - Cancelled
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Project Name
+          maxLength: 100
+        description:
+          type: string
+          nullable: true
+          title: Project Description (Optional)
+        expected_start_date:
+          type: string
+          format: date
+          nullable: true
+        expected_end_date:
+          type: string
+          format: date
+          nullable: true
+        owner:
+          type: integer
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectTask'
+          readOnly: true
+        access_table:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectAccessTable'
+          readOnly: true
+      required:
+      - access_table
+      - created_at
+      - id
+      - name
+      - owner
+      - tasks
+      - updated_at
+    ProjectAccessRoleTable:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        access_role:
+          $ref: '#/components/schemas/AccessRoleEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        project_access_table:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+          title: Staff User
+      required:
+      - access_role
+      - created_at
+      - id
+      - project_access_table
+      - updated_at
+      - user
+    ProjectAccessRoleTableRequest:
+      type: object
+      properties:
+        access_role:
+          $ref: '#/components/schemas/AccessRoleEnum'
+        user:
+          type: integer
+          title: Staff User
+      required:
+      - access_role
+      - user
+    ProjectAccessTable:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        project:
+          type: integer
+          readOnly: true
+        access_role_table:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectAccessRoleTable'
+          readOnly: true
+      required:
+      - access_role_table
+      - id
+      - project
+    ProjectRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          title: Project Name
+          maxLength: 100
+        description:
+          type: string
+          nullable: true
+          title: Project Description (Optional)
+        expected_start_date:
+          type: string
+          format: date
+          nullable: true
+        expected_end_date:
+          type: string
+          format: date
+          nullable: true
+      required:
+      - name
+    ProjectTask:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Task Name
+          maxLength: 100
+        description:
+          type: string
+          nullable: true
+          title: Task Description (Optional)
+        project:
+          type: integer
+          readOnly: true
+        task_weight:
+          type: number
+          format: double
+          nullable: true
+          title: Task Weight Value
+        progress:
+          allOf:
+          - $ref: '#/components/schemas/ProgressEnum'
+          readOnly: true
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectTaskComment'
+          readOnly: true
+        attachment:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectTaskAttachment'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - attachment
+      - comments
+      - created_at
+      - id
+      - name
+      - progress
+      - project
+      - updated_at
+    ProjectTaskAssignee:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        task:
+          type: integer
+          readOnly: true
+          nullable: true
+        assignee:
+          type: integer
+          nullable: true
+      required:
+      - id
+      - task
+    ProjectTaskAssigneeRequest:
+      type: object
+      properties:
+        assignee:
+          type: integer
+          nullable: true
+    ProjectTaskAttachment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        attachment:
+          type: string
+          format: uri
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - attachment
+      - created_at
+      - id
+      - updated_at
+    ProjectTaskAttachmentRequest:
+      type: object
+      properties:
+        attachment:
+          type: string
+          format: binary
+      required:
+      - attachment
+    ProjectTaskComment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        comment:
+          type: string
+          maxLength: 500
+        task:
+          type: integer
+          readOnly: true
+          nullable: true
+        commented_by:
+          type: integer
+          readOnly: true
+          nullable: true
+      required:
+      - commented_by
+      - id
+      - task
+    ProjectTaskCommentRequest:
+      type: object
+      properties:
+        comment:
+          type: string
+          maxLength: 500
+    ProjectTaskRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          title: Task Name
+          maxLength: 100
+        description:
+          type: string
+          nullable: true
+          title: Task Description (Optional)
+        task_weight:
+          type: number
+          format: double
+          nullable: true
+          title: Task Weight Value
+      required:
+      - name
+    ResetToken:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+      - token
+    ResetTokenRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          minLength: 1
+      required:
+      - token
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        office:
+          type: string
+        section:
+          type: string
+          nullable: true
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        work_role:
+          $ref: '#/components/schemas/WorkRoleEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        user:
+          type: integer
+      required:
+      - created_at
+      - id
+      - office
+      - updated_at
+      - work_role
+    RoleEnum:
+      enum:
+      - Administrator
+      - Coordinator
+      - Staff
+      - Head
+      type: string
+      description: |-
+        * `Administrator` - Administrator
+        * `Coordinator` - Coordinator
+        * `Staff` - Staff
+        * `Head` - Head
+    RoleRequest:
+      type: object
+      properties:
+        office:
+          type: string
+          minLength: 1
+        section:
+          type: string
+          nullable: true
+          minLength: 1
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        work_role:
+          $ref: '#/components/schemas/WorkRoleEnum'
+        user:
+          type: integer
+      required:
+      - office
+      - work_role
+    Section:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        office:
+          type: integer
+      required:
+      - created_at
+      - id
+      - name
+      - office
+      - updated_at
+    SectionRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        office:
+          type: integer
+      required:
+      - name
+      - office
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 150
+        phone:
+          type: string
+          maxLength: 20
+        gender:
+          $ref: '#/components/schemas/GenderEnum'
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+      required:
+      - created_at
+      - email
+      - gender
+      - id
+      - phone
+      - updated_at
+      - username
+    UserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 150
+        phone:
+          type: string
+          minLength: 1
+          maxLength: 20
+        gender:
+          $ref: '#/components/schemas/GenderEnum'
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleRequest'
+      required:
+      - email
+      - gender
+      - phone
+      - username
+    WorkRoleEnum:
+      enum:
+      - Assistant
+      - Lecturer
+      - Secretary
+      type: string
+      description: |-
+        * `Assistant` - Assistant
+        * `Lecturer` - Lecturer
+        * `Secretary` - Secretary
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

@@ -5,8 +5,8 @@ from apps.staff_user.models import StaffUser
 class Message(models.Model):
     id = models.BigAutoField(primary_key=True, unique=True, db_index=True)
     body = models.TextField()
-    sender = models.ForeignKey(StaffUser, on_delete=models.SET_NULL, null=True)
-    receiver = models.ForeignKey(StaffUser, on_delete=models.SET_NULL, null=True)
+    sender = models.ForeignKey(StaffUser, on_delete=models.SET_NULL, null=True, related_name="sent_messages")
+    receiver = models.ForeignKey(StaffUser, on_delete=models.SET_NULL, null=True, related_name="received_messages")
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     

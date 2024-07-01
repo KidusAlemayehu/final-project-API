@@ -14,14 +14,14 @@ class StaffUserViewset(viewsets.ModelViewSet):
     
     def get_queryset(self):
         queryset = super().get_queryset()
-        if self.request.user.office == 'HOD':
+        if self.request.user.roles.filter(office__name=OfficeChoices.HOD, role=RoleChoices.ADMINISTRATOR).exists():
             queryset = queryset
-        elif self.request.user.office == 'UG' and self.request.user.role == 'Coordinator':
+        elif self.request.user.roles.filter(office__name=OfficeChoices.UG, role=RoleChoices.HEAD).exists():
             queryset = queryset.filter(office="UG")
-        elif self.request.user.office == 'PG' and self.request.user.role == 'Coordinator':
+        elif self.request.user.roles.filter(office__name=OfficeChoices.PG, role=RoleChoices.COORDINATOR).exists():
             queryset = queryset.filter(office="PG")
-        elif self.request.user.office == 'TA' and self.request.user.role == 'Coordinator':
-            queryset = queryset.filter(office="TA")    
+        # elif self.request.user.office == 'TA' and self.request.user.role == 'Coordinator':
+        #     queryset = queryset.filter(office="TA")    
         else:
             queryset = queryset.filter(pk=self.request.user).first()
         filter = {}  

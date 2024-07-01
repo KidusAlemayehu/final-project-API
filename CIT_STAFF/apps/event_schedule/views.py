@@ -8,7 +8,6 @@ from .models import *
 # Create your views here.
 class EventScheduleViewset(viewsets.ModelViewSet):
     serializer_class = EventScheduleSerializer
-    permission_classes = (AuthPermissions.IsAuthenticated, )
     queryset = EventSchedule.objects.all()
     
     def get_serializer_context(self):
@@ -20,7 +19,7 @@ class EventScheduleViewset(viewsets.ModelViewSet):
         if self.action in ['update', 'partial_update', 'destroy']:
            permission_classes = [EventPermissions.EventUpdatePermission]
         else:
-            permission_classes = [AuthPermissions.IsAuthenticated, ]
+            permission_classes = [AuthPermissions.IsHOD | AuthPermissions.IsPGCoordinator | AuthPermissions.IsUGSectionHead]
             
         return [permission() for permission in permission_classes]
     

@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'apps.attendance',
     'apps.event_schedule',
     'apps.custom_notification',
+    'apps.msgs',
 ]
 
 REST_FRAMEWORK = {

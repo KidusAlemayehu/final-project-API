@@ -3,8 +3,9 @@ from rest_framework import viewsets
 from rest_framework import permissions
 
 from django.contrib.auth import get_user_model
-from .serializers import UserSerializer
+from .serializers import *
 from apps.staff_auth import permission_handler as Permissions
+from apps.staff_user.models import *
 
 # Create your views here.
 class StaffUserViewset(viewsets.ModelViewSet):
@@ -47,5 +48,21 @@ class StaffUserViewset(viewsets.ModelViewSet):
         else:
             permission_classes = [Permissions.IsAuthenticated] 
         return [permission() for permission in permission_classes]
+    
+class OfficeViewset(viewsets.ModelViewSet):
+    queryset = Office.objects.all()
+    permission_classes = [permissions.AllowAny,]
+    serializer_class = OfficeSerializer
+    
+class SectionViewset(viewsets.ModelViewSet):
+    queryset = Section.objects.all()
+    permission_classes = [permissions.AllowAny,]
+    serializer_class = SectionSerializer
+    
+class RoleViewset(viewsets.ModelViewSet):
+    queryset = Roles.objects.all()
+    permission_classes = [permissions.AllowAny,]
+    serializer_class = RoleSerializer
+    
     
     

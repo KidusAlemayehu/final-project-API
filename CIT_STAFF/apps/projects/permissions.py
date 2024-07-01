@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission
-from .models import ProjectAccessRoleTable, ProjectAccessTable, Project
+from .models import ProjectAccessRoleTable, ProjectAccessTable, Project, ProjectTaskAssignment
 from django.db.models import Q
 
 
@@ -45,6 +45,15 @@ class UpdatePermission(BasePermission):
         role_table = ProjectAccessRoleTable.objects.filter(project_access_table__project=project, user=request.user).first()
         if role_table.access_role == "Owner" or role_table.access_role == "Contributor":
             return True
+        task_pk = view.kwargs.get('pk')
+        if task_pk:
+            is_task_assignee = ProjectTaskAssignment.objects.filter(
+                task__pk=task_pk,
+                assignee=request.user
+            ).exists()
+
+            if is_task_assignee:
+                return True
         return False
     
 class DeletePermission(BasePermission):

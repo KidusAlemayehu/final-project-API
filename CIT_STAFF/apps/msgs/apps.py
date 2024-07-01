@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class NotificationsConfig(AppConfig):
+class MsgsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.custom_notification'
+    name = 'apps.msgs'

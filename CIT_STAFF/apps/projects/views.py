@@ -37,7 +37,7 @@ class ProjectViewset(viewsets.ModelViewSet):
     
     def get_permissions(self):
         if self.action == 'create':
-            permission_classes = [AuthPermissions.IsHOD |  AuthPermissions.IsPGCoordinator | AuthPermissions.IsUGCoordinator]
+            permission_classes = [AuthPermissions.IsHOD |  AuthPermissions.IsPGCoordinator | AuthPermissions.IsUGSectionHead]
         elif self.action in ['update', 'partial_update']:
             permission_classes = [ProjectPermission.UpdatePermission]
         elif self.action == 'destroy':
@@ -109,8 +109,27 @@ class ProjectTaskViewset(viewsets.ModelViewSet):
     
     
     def get_queryset(self):
-        queryset = ProjectTask.objects.filter(project__pk=self.kwargs['project_pk'])
-        return queryset
+        # queryset = ProjectTask.objects.filter(project__pk=self.kwargs['project_pk'])
+        user = self.request.user
+        
+        # Get the user's roles from the ProjectAccessRoleTable
+        user_roles = ProjectAccessRoleTable.objects.filter(user=user)
+        
+        # Get the project ids associated with the user's roles
+        project_ids = user_roles.values_list('project_access_table__project', flat=True)
+        
+        # Get the tasks assigned to the current user
+        assigned_tasks = ProjectTaskAssignment.objects.filter(assignee=user).values_list('task', flat=True)
+        
+        # Filter tasks based on the user's roles and assigned tasks
+        tasks_by_role = ProjectTask.objects.filter(project__in=project_ids, project=self.kwargs['project_pk'])
+        tasks_by_assignment = ProjectTask.objects.filter(id__in=assigned_tasks, project=self.kwargs['project_pk'])
+        
+        # Combine both sets of tasks and ensure uniqueness using distinct()
+        tasks = tasks_by_role | tasks_by_assignment
+        
+        return tasks.distinct()
+        # return queryset
         
     def get_serializer_context(self):
         project = Project.objects.filter(pk=self.kwargs['project_pk']).first()
@@ -119,12 +138,12 @@ class ProjectTaskViewset(viewsets.ModelViewSet):
         return context
     
     def get_permissions(self):
-        if self.action in ['create', 'destroy', 'update', 'partial_update']:
-            permission_classes = [ProjectPermission.CreatePermission, ProjectPermission.UpdatePermission, ProjectPermission.DeletePermission]
-        elif self.action == 'list':
-            permission_classes = [ProjectPermission.ListPermission]
-        elif self.action == 'retreieve':
-            permission_classes = [ProjectPermission.ReadPermission]
+        if self.action in ['create', 'destroy']:
+            permission_classes = [ProjectPermission.CreatePermission, ProjectPermission.DeletePermission]
+        elif self.action in ['update', 'partial_update']:
+            permission_classes = [ProjectPermission.UpdatePermission]
+        elif self.action in ['list', 'retrieve']:
+            permission_classes = [AuthPermissions.IsAuthenticated]
         else:
             permission_classes = [ProjectPermission.ReadPermission]
             
@@ -163,8 +182,18 @@ class ProjectTaskCommentViewset(viewsets.ModelViewSet):
 class ProjectTaskAssigneeViewset(viewsets.ModelViewSet):
     queryset = ProjectTaskAssignment.objects.all()
     serializer_class = ProjectTaskAssigneeSerializer
-    permission_classes = (AuthPermissions.IsAuthenticated, )
+    permission_classes = (ProjectPermission.CreatePermission, ProjectPermission.UpdatePermission)
     
+    
+    def get_permissions(self):
+        if self.action in ['create', 'destroy']:
+            permission_classes = [ProjectPermission.CreatePermission, ProjectPermission.DeletePermission]
+        elif self.action in ['update', 'partial_update']:
+            permission_classes = [ProjectPermission.UpdatePermission]
+        else:
+            permission_classes = [ProjectPermission.ReadPermission]
+            
+        return [permission() for permission in permission_classes]
     def get_queryset(self):
         queryset = ProjectTaskAssignment.objects.filter(task__pk=self.kwargs['task_pk'])
         return queryset
@@ -174,4 +203,21 @@ class ProjectTaskAssigneeViewset(viewsets.ModelViewSet):
         project_task = ProjectTask.objects.filter(pk=self.kwargs['task_pk']).first()
         context['project_task'] = project_task
         return context
+    
+class ProjectTaskAttachment(viewsets.ModelViewSet):
+    queryset = ProjectTaskAttachment.objects.all()
+    serializer_class = ProjectTaskAttachmentSerializer
+    
+    def get_permissions(self):
+        if self.action in ['create', 'destroy']:
+            permission_classes = [ProjectPermission.CreatePermission, ProjectPermission.DeletePermission]
+        elif self.action in ['update', 'partial_update']:
+            permission_classes = [ProjectPermission.UpdatePermission]
+        elif self.action in ['list', 'retrieve']:
+            permission_classes = [AuthPermissions.IsAuthenticated]
+        else:
+            permission_classes = [ProjectPermission.ReadPermission]
+            
+        return [permission() for permission in permission_classes]
+    
     

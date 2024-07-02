@@ -12,35 +12,35 @@ class StaffUserViewset(viewsets.ModelViewSet):
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
     
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        if self.request.user.roles.filter(office__name=OfficeChoices.HOD, role=RoleChoices.ADMINISTRATOR).exists():
-            queryset = queryset
-        elif self.request.user.roles.filter(office__name=OfficeChoices.UG, role=RoleChoices.HEAD).exists():
-            queryset = queryset.filter(office="UG")
-        elif self.request.user.roles.filter(office__name=OfficeChoices.PG, role=RoleChoices.COORDINATOR).exists():
-            queryset = queryset.filter(office="PG")
-        # elif self.request.user.office == 'TA' and self.request.user.role == 'Coordinator':
-        #     queryset = queryset.filter(office="TA")    
-        else:
-            queryset = queryset.filter(pk=self.request.user).first()
-        filter = {}  
-        try:
-            office = self.request.GET.get('office')
-        except:
-            office = None
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     if self.request.user.roles.filter(office__name=OfficeChoices.HOD, role=RoleChoices.ADMINISTRATOR).exists():
+    #         queryset = queryset
+    #     elif self.request.user.roles.filter(office__name=OfficeChoices.UG, role=RoleChoices.HEAD).exists():
+    #         queryset = queryset.filter(office="UG")
+    #     elif self.request.user.roles.filter(office__name=OfficeChoices.PG, role=RoleChoices.COORDINATOR).exists():
+    #         queryset = queryset.filter(office="PG")
+    #     # elif self.request.user.office == 'TA' and self.request.user.role == 'Coordinator':
+    #     #     queryset = queryset.filter(office="TA")    
+    #     else:
+    #         queryset = queryset.filter(pk=self.request.user).first()
+    #     filter = {}  
+    #     try:
+    #         office = self.request.GET.get('office')
+    #     except:
+    #         office = None
             
-        try:
-            role = self.request.GET.get('role')
-        except:
-            role = None
+    #     try:
+    #         role = self.request.GET.get('role')
+    #     except:
+    #         role = None
 
-        if office:
-            filter['office'] = office
-        if role:
-            filter['role'] = role
-        queryset = queryset.filter(**filter)
-        return queryset
+    #     if office:
+    #         filter['office'] = office
+    #     if role:
+    #         filter['role'] = role
+    #     queryset = queryset.filter(**filter)
+    #     return queryset
         
     def get_permissions(self):
         if self.action == 'create':

@@ -87,13 +87,14 @@ SPECTACULAR_SETTINGS = {
 
 CSRF_TRUSTED_ORIGINS = []
 
+# Use either CORS_ALLOW_ALL_ORIGINS or CORS_ALLOWED_ORIGINS
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://0.0.0.0:8888",
-]
+
+# If using specific origins, comment out the line above and uncomment below
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "http://0.0.0.0:8888",
+# ]
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -102,7 +103,6 @@ CORS_ALLOW_HEADERS = [
     "accept-encoding",
     "authorization",
     "content-type",
-    "access-control-allow-origin",
     "dnt",
     "origin",
     "user-agent",

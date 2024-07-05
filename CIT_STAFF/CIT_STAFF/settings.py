@@ -91,8 +91,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://0.0.0.0:8888',
+    "http://localhost:3000",
+    "http://0.0.0.0:8888",
 ]
 
 CORS_ALLOW_CREDENTIALS = True

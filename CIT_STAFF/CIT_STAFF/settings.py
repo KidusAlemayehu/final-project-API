@@ -102,6 +102,7 @@ CORS_ALLOW_HEADERS = [
     "accept-encoding",
     "authorization",
     "content-type",
+    "access-control-allow-origin",
     "dnt",
     "origin",
     "user-agent",

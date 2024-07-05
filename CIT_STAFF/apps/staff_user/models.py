@@ -7,6 +7,7 @@ class OfficeChoices(models.TextChoices):
     UG = 'Under Graduate'
     PG = 'Post Graduate'
     DEVELOPER = 'Developer'
+    TA= 'Technical Assistant'
     
 class RoleChoices(models.TextChoices):
     ADMINISTRATOR = 'Administrator'

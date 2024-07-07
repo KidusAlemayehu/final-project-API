@@ -43,7 +43,7 @@ class ProjectViewset(viewsets.ModelViewSet):
         elif self.action == 'destroy':
             permission_classes = [ProjectPermission.ProjectDeletePermission]
         elif self.action == 'retrieve':
-            permission_classes = [ProjectPermission.ReadPermission]
+            permission_classes = [AuthPermissions.IsAuthenticated]
         elif self.action == 'list':
             permission_classes = [AuthPermissions.IsAuthenticated]
         else:

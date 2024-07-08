@@ -26,6 +26,7 @@ from apps.staff_auth import urls as AuthUrls
 from apps.projects import urls as ProjectUrls
 from apps.event_schedule import urls as EventScheduleUrls
 from apps.custom_notification import urls as NotificationUrls
+from apps.msgs import urls as MessageUrls
 
 
 schema_view = get_schema_view(
@@ -47,5 +48,6 @@ urlpatterns = [
     path('', include(ProjectUrls)),
     path('', include(EventScheduleUrls)),
     path('', include(NotificationUrls)),
+    path('', include(MessageUrls)),
 ]
 

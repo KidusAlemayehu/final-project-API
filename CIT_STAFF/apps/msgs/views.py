@@ -33,7 +33,7 @@ class MessageListView(ListAPIView):
         queryset = Message.objects.all()
         type = self.request.GET.get('type', None)
         if type is None:
-            if self.request.user.roles.office__name==OfficeChoices.HOD and self.request.user.roles.role==RoleChoices.ADMINISTRATOR:
+            if self.request.user.roles.filter(office__name=OfficeChoices.HOD, role=RoleChoices.ADMINISTRATOR).exists():
                 queryset = Message.objects.all().order_by('-created_at')
             else:
                 queryset1 = Message.objects.filter(sender=self.request.user.id).order_by('-created_at')

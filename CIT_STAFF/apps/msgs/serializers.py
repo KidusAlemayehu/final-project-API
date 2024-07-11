@@ -16,5 +16,6 @@ class MessageSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         attrs['sender'] = self.context.get('sender')
         attrs['receiver'] = self.context.get('receiver')
+        print('Sender: ', attrs['sender'])
         return attrs
     

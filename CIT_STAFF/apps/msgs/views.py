@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from apps.staff_auth import permission_handler as AuthPermissions
 from apps.staff_user.models import OfficeChoices, RoleChoices
 from .serializers import MessageSerializer, MessageAttachmentSerializer
+from apps.staff_user.models import StaffUser
 from .models import Message
 
 # Create your views here.
@@ -16,11 +17,12 @@ class MessageSendAPIView(CreateAPIView):
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['sender'] = self.request.user
-        context['receiver'] = self.request.GET.get('receiver', None)
+        context['receiver'] =  self.request.GET.get('receiver', None)
         return context
     
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+        receiver =  self.request.GET.get('receiver', None)
+        serializer = self.serializer_class(data=request.data, context={"sender": self.request.user, "receiver": StaffUser.objects.filter(id=receiver).first()})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

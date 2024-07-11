@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from apps.staff_user.serializers import UserSerializer
 from.models import Message, MessageAttachment
 
 
@@ -8,9 +9,11 @@ class MessageAttachmentSerializer(serializers.ModelSerializer):
         fields = "__all__"
         
 class MessageSerializer(serializers.ModelSerializer):
+    sender = UserSerializer(read_only=True)
+    receiver = UserSerializer(read_only=True)
     class Meta:
         model = Message
-        fields = "__all__"
+        fields = ['id', 'body', 'sender', 'receiver', 'created_at', 'updated_at']
         read_only_fields = ['sender', 'receiver', 'created_at', 'updated_at']
         
     def validate(self, attrs):

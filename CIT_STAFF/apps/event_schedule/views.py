@@ -28,7 +28,7 @@ class EventScheduleViewset(viewsets.ModelViewSet):
             invitations = EventInvitation.objects.filter(invited=user)
             event_ids = invitations.values_list('event_schedule_id', flat=True)
             queryset =  EventSchedule.objects.filter(id__in=event_ids)
-        return queryset.order_by('-start_time')
+        return queryset
     
     def get_permissions(self):
         if self.action in ['update', 'partial_update', 'destroy']:

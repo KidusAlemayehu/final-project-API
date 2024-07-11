@@ -65,8 +65,8 @@ class ChangePasswordView(APIView):
          if request.user.is_authenticated:
             uidb64 = urlsafe_b64encode(force_bytes(request.user.pk))
             token = PasswordResetTokenGenerator().make_token(request.user)
-            relative_uri = "set_password/"+"?uidb64=" + uidb64.decode() + "&token=" + str(token)
-            change_link =  "http://127.0.0.1:8000/auth/" + relative_uri
+            relative_uri = "http://localhost:3000/set_password/"+"?uidb64=" + uidb64.decode() + "&token=" + str(token)
+            change_link =  relative_uri
             data = {'change_password_link': change_link}
             return Response(data, status=status.HTTP_200_OK)
      

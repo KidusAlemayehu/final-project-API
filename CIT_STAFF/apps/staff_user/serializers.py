@@ -66,8 +66,8 @@ class UserSerializer(serializers.ModelSerializer):
         ]
         
     def validate(self, attrs):
-        if get_user_model().objects.filter(email=attrs['email']).exists():
-            raise serializers.ValidationError("Email already exists")
+        # if get_user_model().objects.filter(email=attrs['email']).exists():
+        #     raise serializers.ValidationError("Email already exists")
         if 'roles' in self.initial_data:
             for role in self.initial_data['roles']:
                 if role['office'] == 'HOD' and role['role'] != 'Administrator':
